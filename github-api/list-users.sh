@@ -3,7 +3,7 @@
 
 # About: This script is to list the users who have read and write access to my organisation
 # input: export "username"
-#input: export "Token
+# input: export "Token
 # Owner: Cecilia.
 # GitHub API URL
 API_URL="https://api.github.com"
@@ -12,9 +12,8 @@ API_URL="https://api.github.com"
 USERNAME=$username
 TOKEN=$token
 
-# User and Repository information
-REPO_OWNER=$1
-REPO_NAME=$2
+# Organization information
+ORG_NAME="CeciliaTheChangeMakers"
 
 # Function to make a GET request to the GitHub API
 function github_api_get {
@@ -25,23 +24,23 @@ function github_api_get {
     curl -s -u "${USERNAME}:${TOKEN}" "$url"
 }
 
-# Function to list users with read access to the repository
-function list_users_with_read_access {
-    local endpoint="repos/${REPO_OWNER}/${REPO_NAME}/collaborators"
+# Function to list users within the organization
+function list_organization_members {
+    local endpoint="orgs/${ORG_NAME}/members"
 
-    # Fetch the list of collaborators on the repository
-    collaborators="$(github_api_get "$endpoint" | jq -r '.[] | select(.permissions.pull == true) | .login')"
+    # Fetch the list of members in the organization
+    members="$(github_api_get "$endpoint" | jq -r '.[].login')"
 
-    # Display the list of collaborators with read access
-    if [[ -z "$collaborators" ]]; then
-        echo "No users with read access found for ${REPO_OWNER}/${REPO_NAME}."
+    # Display the list of organization members
+    if [[ -z "$members" ]]; then
+        echo "No members found for the organization ${ORG_NAME}."
     else
-        echo "Users with read access to ${REPO_OWNER}/${REPO_NAME}:"
-        echo "$collaborators"
+        echo "Members of the organization ${ORG_NAME}:"
+        echo "$members"
     fi
 }
 
 # Main script
 
-echo "Listing users with read access to ${REPO_OWNER}/${REPO_NAME}..."
-list_users_with_read_access
+echo "Listing members of the organization ${ORG_NAME}..."
+list_organization_members
