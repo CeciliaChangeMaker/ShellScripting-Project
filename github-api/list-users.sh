@@ -1,5 +1,10 @@
 #!/bin/bash
+#####################################
 
+# About: This script is to list the users who have read and write access to my organisation
+# input: export "username"
+#input: export "Token
+# Owner: Cecilia.
 # GitHub API URL
 API_URL="https://api.github.com"
 
